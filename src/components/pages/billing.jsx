@@ -5,17 +5,11 @@ import { noteContext } from "../../Context/noteContext";
 import { useContext } from "react";
 // import { Context } from "../Context/context";
 
-export default function Order() {
+export default function Billing() {
   const navigate = useNavigate();
   const { bookData } = useContext(noteContext);
   console.log("🚀 ~ file: order.jsx:10 ~ Order ~ bookData:", bookData);
-
   console.log("ORDER");
-  // <Context.Consumer>
-  //   {(context) => console.log(context.bookingDetails)}
-  // </Context.Consumer>;
-  // const { bookingDetails } = useContext(Context);
-  // console.log();
   function handleclick(e) {
     console.log("clicked");
     navigate("/success");
@@ -185,121 +179,7 @@ export default function Order() {
       <div className="relative -top-12">
         <img src={line} alt="alt : line"></img>
       </div>
-
-      <p className="flex relative -top-12 m-2 w-screen max-w-md px-6 font-semibold">
-        Payment Option
-      </p>
-      <div className="relative -top-14 mt-6 mx-8 mb-3">
-        <p className="-mt-3 mx-4">Mode</p>
-        <div className="flex flex-row border border-solid  border-gray-300 rounded-md p-2 justify-start gap-5 mx-4">
-          <div className="flex items-center ">
-            <input
-              id="link-checkbox"
-              type="checkbox"
-              value=""
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-
-            <label
-              for="link-checkbox"
-              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              {" "}
-              Advance
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input
-              id="link-checkbox"
-              type="checkbox"
-              value=""
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-
-            <label
-              for="link-checkbox"
-              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              {" "}
-              To-Pay
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input
-              id="link-checkbox"
-              type="checkbox"
-              value=""
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-
-            <label
-              for="link-checkbox"
-              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              {" "}
-              Billing
-            </label>
-          </div>
-        </div>
-        <p className="mt-3 mx-4">Pay Via</p>
-        <div className="flex flex-col border border-solid  border-gray-300 rounded-md p-2 justify-start gap-2 mx-4 divide-y">
-          <div className="flex items-center ">
-            <input
-              id="link-checkbox"
-              type="checkbox"
-              value=""
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-            <label
-              for="link-checkbox"
-              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              {" "}
-              Cash
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input
-              id="link-checkbox"
-              type="checkbox"
-              value=""
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-
-            <label
-              for="link-checkbox"
-              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              {" "}
-              UPI
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input
-              id="link-checkbox"
-              type="checkbox"
-              value=""
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-
-            <label
-              for="link-checkbox"
-              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              {" "}
-              Internet Banking
-            </label>
-          </div>
-        </div>
-        <div className="flex justify-center items-center">
-          <button
-            className="btn btn-wide mt-3 bg-blue hover:bg-blue"
-            onClick={handleclick}
-          >
-            Request
-          </button>
-        </div>
-      </div>
+      <div>Estimated distnace </div>
     </>
   );
 }

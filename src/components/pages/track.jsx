@@ -1,7 +1,7 @@
 import line from "../../assets/images/line.svg";
 
-import { useState } from "react";
-import Scroll from "./scroll";
+import { useEffect, useState } from "react";
+import ScrollTrack from "./scrollTrack";
 import SearchList from "./searchList";
 
 export default function Track({ details }) {
@@ -10,30 +10,25 @@ export default function Track({ details }) {
   const [data, setData] = useState({});
   const [mainData, setMainData] = useState(details);
 
-  const handleChange = (e) => {
-    setSearchFeild(e.target.value);
-    console.log(searchFeild + " => " + e.target.value);
-    if (e.target.value === "") {
-      setSearchShow(true);
-    } else {
-      setSearchShow(true);
-    }
-    setData(
-      details.filter((order) => {
-        return order.dropoffLocation
-          .toLowerCase()
-          .includes(searchFeild.toLowerCase());
-      })
-    );
-  };
-  function searchList() {
-    if (searchShow) {
-      return (
-        <Scroll>
-          <SearchList filteredOrder={data}></SearchList>
-        </Scroll>
+  useEffect(() => {
+    if (searchFeild.length > 0) {
+      setData(
+        details.filter((order) => {
+          return order.dropoffLocation
+            .toLowerCase()
+            .includes(searchFeild.toLowerCase());
+        })
       );
+    } else {
+      setData(details);
     }
+  }, [searchFeild]);
+  function searchList() {
+    return (
+      <ScrollTrack>
+        <SearchList filteredOrder={data}></SearchList>
+      </ScrollTrack>
+    );
   }
   return (
     <div className="relative flex drop-shadow-2xl -top-14 items-center justify-center bg-white max-w-screen rounded-t-2xl">
@@ -51,7 +46,7 @@ export default function Track({ details }) {
             id="searchOrders"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Search Order"
-            onChange={handleChange}
+            onChange={(e) => setSearchFeild(e.target.value)}
             required
           />
         </div>

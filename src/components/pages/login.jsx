@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import noteContext from "../../Context/noteContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -39,6 +41,7 @@ export default function Login() {
   };
 
   return (
+    // <NodeState.Provider values={{ login: email }}>
     <form className="flex flex-col -top-14 items-center justify-center">
       <div className="m-8">
         <label
@@ -119,5 +122,6 @@ export default function Login() {
         Login
       </button>
     </form>
+    // </NodeState.Provider>
   );
 }

@@ -1,7 +1,8 @@
 import line from "../../assets/images/line.svg";
 import footerMandla from "../../assets/images/footerMandala.svg";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { noteContext } from "../../Context/noteContext";
 // import { Context } from "../Context/context";
 
 export default function Book() {
@@ -11,7 +12,10 @@ export default function Book() {
   const [materialDetail, setMaterialDetail] = useState("");
   const [weight, setWeight] = useState("");
   const [size, setSize] = useState("");
+  const [vehicalSize, setVehicalSize] = useState("");
   const [bodyType, setBodyType] = useState("");
+
+  const { setbookData } = useContext(noteContext);
   const navigate = useNavigate();
   const reqBody = {
     pickupLocation: pickupLocation,
@@ -28,6 +32,7 @@ export default function Book() {
     console.log("Done");
     // <Context.Provider value={{ bookingDetails: reqBody }}></Context.Provider>;
     console.log(reqBody);
+    setbookData(reqBody);
     navigate("/order");
   }
   // console.log(reqBody);
@@ -80,7 +85,7 @@ export default function Book() {
           <img src={line} alt="alt : line"></img>
         </div>
         <p className="mb-2 w-screen max-w-md px-4 font-semibold">
-          Material Details
+          Goods Details
         </p>
         <div className="-mt-5 w-screen max-w-md p-4">
           <input
@@ -110,10 +115,10 @@ export default function Book() {
         </div>
         <div className="-mt-5 w-screen max-w-md p-4">
           <input
-            type="number"
+            type="text"
             id="size"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Size (e.g. 32 ft, 20 ft )"
+            placeholder="Size (L X B X H )"
             value={size}
             onChange={(event) => {
               setSize(event.target.value);
@@ -127,19 +132,19 @@ export default function Book() {
         <p className="mb-2 w-screen max-w-md px-4 font-semibold">
           Vehicle Requirement
         </p>
-        {/* <div className="-mt-4 w-screen max-w-md p-4">
+        <div className="-mt-4 w-screen max-w-md p-4">
           <input
             type="text"
-            id="vehicalType"
+            id="vehicalSize"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="vehical Type (e.g. , cement etc)"
-            value={vehicalType}
+            placeholder="vehical Size (e.g. 32 ft, 24 ft)"
+            value={vehicalSize}
             onChange={(event) => {
-              setVehicalType(event.target.value);
+              setVehicalSize(event.target.value);
             }}
             required
           />
-        </div> */}
+        </div>
         <div className="-mt-4 w-screen max-w-md p-4">
           <input
             type="text"
