@@ -1,6 +1,6 @@
 import line from "../../assets/images/line.svg";
 import footerMandla from "../../assets/images/footerMandala.svg";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { noteContext } from "../../Context/noteContext";
 // import { Context } from "../Context/context";
@@ -14,9 +14,12 @@ export default function Book() {
   const [size, setSize] = useState("");
   const [vehicalSize, setVehicalSize] = useState("");
   const [bodyType, setBodyType] = useState("");
+  const [distance, setDistance] = useState("");
 
   const { setbookData } = useContext(noteContext);
+
   const navigate = useNavigate();
+
   const reqBody = {
     pickupLocation: pickupLocation,
     dropoffLocation: dropoffLocation,
@@ -24,9 +27,10 @@ export default function Book() {
     materialDetail: materialDetail,
     weight: weight,
     size: size,
+    vehicalSize: vehicalSize,
     bodyType: bodyType,
   };
-
+  // useEffect(() => {}, [checked === true])
   function handleFormSubmit(event) {
     event.preventDefault();
     console.log("Done");
@@ -184,40 +188,54 @@ export default function Book() {
             </label>
           </div>
         </div>
-        <div className="mt-4 max-h-32 bg-[url('')]">
+        <div className="mt-4 max-h-32">
           <img src={footerMandla} alt="alt : Mandala Pattern"></img>
-          <div className="relative -top-44 p-3 max-w-screen-sm min-w-">
+          <div className="relative -top-44 p-3 max-w-screen-sm ">
             <div className="flex justify-center">
               <div className="block max-w-sm rounded-lg bg-white text-center shadow-lg dark:bg-neutral-700">
                 <div className="border-b-2 border-neutral-100 py-1 px-6 dark:border-neutral-600 dark:text-neutral-50">
-                  <div className="flex flex-row items-start">
-                    <div className="grid grid-rows-3 gap-1">
-                      <div className="text-xs">
-                        Delhi (DL) {"--->"} Mumbai (MH){" "}
+                  <div className="flex flex-row items-start ">
+                    <div className="flex flex-col gap-1 items-start">
+                      <div className="text-sm">
+                        📍 {""}
+                        {pickupLocation.length == 0
+                          ? "Src"
+                          : pickupLocation}{" "}
+                        {"--->"} 🏁{" "}
+                        {dropoffLocation.length == 0 ? "Dest" : dropoffLocation}{" "}
                       </div>
-                      <div className="text-xs">TRUCK REQUIRED</div>
-                      <div className="text-xs font-semibold">
-                        10.0 Tonne(s) Truck{" "}
+                      <div className="text-sm">
+                        🚍{" "}
+                        {vehicalSize.length == 0 ? "NA" : vehicalSize + " ft"} :{" "}
+                        {bodyType.length == 0 ? "NA" : bodyType + " Body"}
+                      </div>
+                      <div className="text-sm font-semibold">
+                        📦 {weight.length == 0 ? "NA" : weight} Ton, Size of
+                        each goods : {size.length == 0 ? "NA" : size}{" "}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-row items-center justify-between gap-16 p-3 ">
-                  <div className="grid grid-rows-3">
-                    <div className="text-xs">86</div>
+                <div className="flex flex-row items-center justify-between gap-16 p-3 mx-3 ">
+                  <div className="flex flex-col items-start">
+                    <div>
+                      <div className="text-sm font-semibold -top-2">
+                        🛣 Distance {distance.length == 0 ? "NA" : distance} km
+                      </div>
+                    </div>
+                    {/* <div className="text-xs">86</div>
                     <div className="text-sm font-semibold -top-2">₹ 16,000</div>
-                    <div className="text-xs">₹ 2000/Tonne </div>
+                    <div className="text-xs">₹ 2000/Tonne </div> */}
                   </div>
                   <div className="grid grid-rows-1 gap-2">
                     <div>
                       <button
                         type="submit"
                         className="text-white bg-blue hover:bg-blue focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
-                        w-[8rem]
-                        "
+                        w-[8rem]"
                         onClick={handleFormSubmit}
                       >
-                        Book Now
+                        Proceed
                       </button>
                     </div>
                   </div>

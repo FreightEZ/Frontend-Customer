@@ -1,5 +1,6 @@
 import React from "react";
 import Layout from "./components/Layouts/layout";
+import LSLayout from "./components/Layouts/LSLayout";
 import { Route, Router, Routes } from "react-router-dom";
 import Book from "./components/pages/book";
 import Track from "./components/pages/track";
@@ -14,6 +15,7 @@ import Map1 from "./components/pages/currentLocationMap";
 import Billing from "./components/pages/billing";
 import tempCityPassByData from "./Data/tempCityPassByData";
 import DamageProtection from "./components/pages/damagePotection";
+import Success from "./components/pages/success";
 
 axios.defaults.baseURL = "http://127.0.0.1:4000";
 axios.defaults.withCredentials = true;
@@ -21,8 +23,10 @@ axios.defaults.withCredentials = true;
 export default function () {
   return (
     <Routes>
+      {/* <Route exact path="/" element={<LSLayout />}> */}
       <Route exact path="/login" element={<Login />} />
       <Route exact path="/signup" element={<Signup />} />
+      {/* </Route> */}
       <Route path="/" element={<Layout />}>
         <Route exact path="/book" element={<Book />} />
         <Route exact path="/order" element={<Order />} />
@@ -33,11 +37,11 @@ export default function () {
           path="/track"
           element={<Track details={initialDetails} />}
         />
-        {/* <Route exact path="/success" element={<Success />} /> */}
         <Route exact path="/list" element={<SearchList />} />
         <Route exact path="/billing" element={<Billing />} />
         <Route exact path="/insurance" element={<DamageProtection />} />
       </Route>
+      <Route exact path="/success" element={<Success />} />
       <Route
         exact
         path="/map"
