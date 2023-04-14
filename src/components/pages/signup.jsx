@@ -53,7 +53,7 @@ export default function Signup() {
     <div className="flex flex-col justify-center items-center">
       <div>
         <p className="mt-10 p-3 font-bold text-xl text-center ">
-          Sign up to book your goods Shipement 🚚{" "}
+          Sign up, to BOOK your goods Shipment 🚚{" "}
         </p>
       </div>
       <div>

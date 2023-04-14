@@ -5,11 +5,9 @@ import ScrollTrack from "./scrollTrack";
 import SearchList from "../pages/serachList";
 import { Navigate, useNavigate } from "react-router-dom";
 
-export default function Track({ details }) {
+export default function PreviousOrders({ details }) {
   const [searchFeild, setSearchFeild] = useState("");
-  const [searchShow, setSearchShow] = useState(false);
   const [data, setData] = useState({});
-  const [mainData, setMainData] = useState(details);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,7 +18,7 @@ export default function Track({ details }) {
             order.dropoffLocation
               .toLowerCase()
               .includes(searchFeild.toLowerCase()) &&
-            order.orderStatus == "ongoing"
+            order.orderStatus.toLowerCase() == "done"
           );
         })
       );
@@ -57,7 +55,7 @@ export default function Track({ details }) {
               d="M15.75 19.5L8.25 12l7.5-7.5"
             />
           </svg>
-          Track Ongoing Cargo
+          Previous Order
         </p>
         <div className="relative -top-2">
           <img src={line} alt="alt : line"></img>

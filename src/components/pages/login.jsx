@@ -130,7 +130,10 @@ export default function Login() {
       </form>
       <div className="flex mt-4 gap-1 text-md">
         <p>No Account ? </p>
-        <p onClick={handleClick}> Sign Up Now.</p>
+        <p onClick={handleClick} className="cursor-pointer">
+          {" "}
+          Sign Up Now.
+        </p>
       </div>
     </div>
     // </NodeState.Provider>

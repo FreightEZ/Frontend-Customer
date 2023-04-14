@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ScrollPassedCity from "./scrollPassedCity";
 import PassedCity from "./passedCity";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const CurrentLocationMap = ({ details }) => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [passedCities, setPassedCities] = useState(details);
+  const navigate = useNavigate();
   useEffect(() => {
     // Function to detect current location
     const detectCurrentLocation = () => {
@@ -68,6 +70,10 @@ const CurrentLocationMap = ({ details }) => {
     }
   }, [currentLocation]);
 
+  function handleBack() {
+    navigate("/track");
+  }
+
   return (
     <div className="w-96">
       {/* <div className="flex justif */}
@@ -78,7 +84,8 @@ const CurrentLocationMap = ({ details }) => {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          className="w-5 h-5"
+          className="w-5 h-5 cursor-pointer"
+          onClick={handleBack}
         >
           <path
             stroke-linecap="round"

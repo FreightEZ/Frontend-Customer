@@ -1,23 +1,71 @@
 import { useNavigate } from "react-router-dom";
-
+import React, { useState } from "react";
+import axios from "axios";
 import line from "../../assets/images/line.svg";
 import { noteContext } from "../../Context/noteContext";
 import { useContext } from "react";
-// import { Context } from "../Context/context";
 
 export default function Order() {
+  const [isCargoInsured, setIsCargoInsured] = useState(false);
+  const [paymentMode, setPaymentMode] = useState(""); // state to store the selected paymentMode
+  const [paymentVia, setPaymentVia] = useState(""); // state to store the selected paymentMode
+
   const navigate = useNavigate();
   const { bookData } = useContext(noteContext);
   console.log("🚀 ~ file: order.jsx:10 ~ Order ~ bookData:", bookData);
   console.log("ORDER");
-  // <Context.Consumer>
-  //   {(context) => console.log(context.bookingDetails)}
-  // </Context.Consumer>;
-  // const { bookingDetails } = useContext(Context);
-  // console.log();
+
+  const handleCargoInsurance = (event) => {
+    setIsCargoInsured(!isCargoInsured);
+  };
+  console.log(isCargoInsured);
+
+  const handleCheckboxChange = (event) => {
+    // event handler for checkbox change
+    const value = event.target.value; // get the value of the checkbox
+    setPaymentMode(value); // update the state with the selected paymentMode
+
+    // Uncheck all other checkboxes
+    const checkboxes = document.querySelectorAll(
+      "modeDiv",
+      'input[type="checkbox"]'
+    ); // get all checkboxes
+    checkboxes.forEach((checkbox) => {
+      if (checkbox.value !== value) {
+        checkbox.checked = false; // uncheck other checkboxes
+      }
+    });
+  };
+
+  const handleCheckboxChangeVia = (event) => {
+    // event handler for checkbox change
+    const value = event.target.value; // get the value of the checkbox
+    setPaymentVia(value); // update the state with the selected paymentMode
+
+    // Uncheck all other checkboxes
+    const checkboxes = document.querySelectorAll(
+      "viaDiv",
+      'input[type="checkbox"]'
+    ); // get all checkboxes
+    checkboxes.forEach((checkbox) => {
+      if (checkbox.value !== value) {
+        checkbox.checked = false; // uncheck other checkboxes
+      }
+    });
+  };
+
+  console.log(paymentVia);
+  console.log(paymentMode);
+
+  function handleLearnMore(e) {
+    navigate("/insurance");
+  }
   function handleclick(e) {
     console.log("clicked");
     navigate("/success");
+  }
+  function handleBack() {
+    navigate("/book");
   }
   return (
     <>
@@ -28,7 +76,8 @@ export default function Order() {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          className="w-5 h-5"
+          className="w-5 h-5 cursor-pointer"
+          onClick={handleBack}
         >
           <path
             stroke-linecap="round"
@@ -92,14 +141,17 @@ export default function Order() {
                 <p className="font-semibold text-sm">Damage Protection </p>
                 <p className="text-gray-700 text-xs dark:text-gray-400">
                   Providing protection against accidental damage in transit
-                  <a href="www.google.com" className="text-blue">
+                  <line
+                    className="text-blue cursor-pointer"
+                    onClick={handleLearnMore}
+                  >
                     {" "}
                     learn more.
-                  </a>
+                  </line>
                 </p>
                 <div>
-                  <p className="text-gray-700 text-xs font-semibold dark:text-gray-400">
-                    ₹ cargo insurance charges
+                  <p className="text-gray-700 mt-2 text-sm font-semibold dark:text-gray-400">
+                    ₹ 2,000 Any type of material.
                   </p>
                 </div>
               </div>
@@ -107,6 +159,7 @@ export default function Order() {
                 <button
                   className="text-xs border border-blue text-blue font-semibold
                rounded-lg px-3 py-1"
+                  onClick={handleCargoInsurance}
                 >
                   Add
                 </button>
@@ -140,17 +193,22 @@ export default function Order() {
       </p>
       <div className="relative -top-14 mt-6 mx-8 mb-3">
         <p className="-mt-3 mx-4">Mode</p>
-        <div className="flex flex-row border border-solid border-gray-300 rounded-md p-2 justify-start gap-5 mx-4 mt-1">
+        <div
+          id="modeDiv"
+          className="flex flex-row border border-solid border-gray-300 rounded-md p-2 justify-start gap-5 mx-4 mt-1"
+        >
           <div className="flex items-center ">
             <input
-              id="link-checkbox"
+              id="checkAdvance"
               type="checkbox"
-              value=""
+              value="Advance"
               className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              onChange={handleCheckboxChange}
+              checked={paymentMode === "Advance"} // set checked based on state
             />
 
             <label
-              for="link-checkbox"
+              for="checkAdvace"
               className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
             >
               {" "}
@@ -159,14 +217,16 @@ export default function Order() {
           </div>
           <div className="flex items-center">
             <input
-              id="link-checkbox"
+              id="checkToPay"
               type="checkbox"
-              value=""
+              value="ToPay"
               className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              onChange={handleCheckboxChange}
+              checked={paymentMode === "ToPay"} // set checked based on state
             />
 
             <label
-              for="link-checkbox"
+              for="checkToPay"
               className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
             >
               {" "}
@@ -175,14 +235,16 @@ export default function Order() {
           </div>
           <div className="flex items-center">
             <input
-              id="link-checkbox"
+              id="checkBilling"
               type="checkbox"
-              value=""
+              value="Billing"
               className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              onChange={handleCheckboxChange}
+              checked={paymentMode === "Billing"} // set checked based on state
             />
 
             <label
-              for="link-checkbox"
+              for="checkBilling"
               className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
             >
               {" "}
@@ -191,17 +253,22 @@ export default function Order() {
           </div>
         </div>
         <p className="mt-3 mx-4 mb-2">Pay Via</p>
-        <div className="flex flex-col border border-solid border-gray-300 rounded-md p-2 justify-start gap-2 mx-4">
+        <div
+          id="viaDiv"
+          className="flex flex-col border border-solid border-gray-300 rounded-md p-2 justify-start gap-2 mx-4"
+        >
           <div className="">
             <div className="flex items-center m-1">
               <input
-                id="link-checkbox"
+                id="checkCash"
                 type="checkbox"
-                value=""
+                value="Cash"
                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                onChange={handleCheckboxChangeVia}
+                checked={paymentVia === "Cash"} // set checked based on state
               />
               <label
-                for="link-checkbox"
+                for="checkCash"
                 className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
                 {" "}
@@ -214,14 +281,16 @@ export default function Order() {
 
             <div className="flex items-center m-1 ">
               <input
-                id="link-checkbox"
+                id="checkUPI"
                 type="checkbox"
-                value=""
+                value="UPI"
                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                onChange={handleCheckboxChangeVia}
+                checked={paymentVia === "UPI"} // set checked based on state
               />
 
               <label
-                for="link-checkbox"
+                for="checkUPI"
                 className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
                 {" "}
@@ -236,14 +305,16 @@ export default function Order() {
             </div>
             <div className="flex items-center m-1">
               <input
-                id="link-checkbox"
+                id="checkIB"
                 type="checkbox"
-                value=""
+                value="Internet Banking"
                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                onChange={handleCheckboxChangeVia}
+                checked={paymentVia === "Internet Banking"} // set checked based on state
               />
 
               <label
-                for="link-checkbox"
+                for="checkIB"
                 className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
                 {" "}
