@@ -12,10 +12,6 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  function handleClick() {
-    navigate("/login");
-  }
-
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -28,18 +24,6 @@ export default function Signup() {
         companyAddress,
         password,
       });
-
-      // console.log(reqBody, "reqBody");
-      // const response = await fetch("http://127.0.0.1:4000/register", {
-      //   body: JSON.stringify(reqBody),
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      // });
-
-      // const res = await response.json();
-
       // Handle successful response
       console.log(response);
       // Do something with response data, e.g., redirect to another page
@@ -277,7 +261,14 @@ export default function Signup() {
       </div>
       <div className="flex mt-4 gap-1 text-md">
         <p>Already had one ? </p>
-        <p onClick={handleClick}> Login Now.</p>
+        <p
+          onClick={(e) => {
+            navigate("/login");
+          }}
+        >
+          {" "}
+          Login Now.
+        </p>
       </div>
     </div>
   );

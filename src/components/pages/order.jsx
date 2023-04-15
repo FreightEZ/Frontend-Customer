@@ -1,24 +1,41 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import line from "../../assets/images/line.svg";
 import { noteContext } from "../../Context/noteContext";
 import { useContext } from "react";
+import moment from "moment";
 
 export default function Order() {
-  const [isCargoInsured, setIsCargoInsured] = useState(false);
+  const [isInsuranceAdded, setIsInsuranceAdded] = useState(false);
   const [paymentMode, setPaymentMode] = useState(""); // state to store the selected paymentMode
   const [paymentVia, setPaymentVia] = useState(""); // state to store the selected paymentMode
+  const [paymentStatus, setPaymentStatus] = useState();
+  const [orderDate, setOrderDate] = useState(""); // state to store the orderDate
+  const [orderTime, setOrderTime] = useState(""); // state to store the orderTime
+  const [orderStatus, setOrderStatus] = useState(""); // state to store the orderStatus
+  const [isDone, setIsDone] = useState(false);
+  const [isInsuranceAddedShow, setIsInsuranceAddedShow] = useState(false);
 
+  // const [sim, setSim] = useState(true);
+  console.log();
   const navigate = useNavigate();
   const { bookData } = useContext(noteContext);
   console.log("🚀 ~ file: order.jsx:10 ~ Order ~ bookData:", bookData);
   console.log("ORDER");
 
-  const handleCargoInsurance = (event) => {
-    setIsCargoInsured(!isCargoInsured);
+  const handleCargoInsurance = () => {
+    // Add logic here to handle the click event for adding cargo insurance
+    // For example, you can update state variables, make API calls, or perform other actions
+    // related to adding cargo insurance
+    setIsInsuranceAdded(!isInsuranceAdded); // Set the isInsuranceAdded state variable to true to trigger the animation
+    setIsInsuranceAddedShow(true);
+    setTimeout(() => {
+      setIsInsuranceAddedShow(false); // Set the isInsuranceAdded state variable back to false after a certain delay to stop the animation
+    }, 1000);
   };
-  console.log(isCargoInsured);
+
+  console.log(isInsuranceAdded);
 
   const handleCheckboxChange = (event) => {
     // event handler for checkbox change
@@ -57,16 +74,46 @@ export default function Order() {
   console.log(paymentVia);
   console.log(paymentMode);
 
+  useEffect(() => {
+    setPaymentStatus("Pending");
+    setOrderDate(moment().format("YYYY-MM-DD"));
+    setOrderTime(moment().format("hh:mm:ss"));
+    setOrderStatus("Pending");
+  }, []);
   function handleLearnMore(e) {
     navigate("/insurance");
   }
-  function handleclick(e) {
-    console.log("clicked");
-    navigate("/success");
-  }
-  function handleBack() {
-    navigate("/book");
-  }
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      // Send POST request to /register endpoint with form data
+      const response = await axios.post("/orderDetails", {
+        email: "example@email.com",
+        ...bookData,
+
+        isInsuranceAdded: isInsuranceAdded,
+        paymentMode: paymentMode,
+        paymentVia: paymentVia,
+        paymentStatus: paymentStatus,
+        orderDate: orderDate,
+        orderTime: orderTime,
+        orderStatus: orderStatus,
+      });
+
+      // Handle successful response
+      console.log(response);
+      if (response.status == 200) {
+        // navigate("/success");
+      }
+      // Do something with response data, e.g., redirect to another page
+    } catch (error) {
+      // Handle error
+      console.error(error);
+    }
+  };
+  console.log(bookData.pickupLocation);
+
   return (
     <>
       <div className="relative flex max-w-screen bg-white -top-14 items-center rounded-t-2xl p-4">
@@ -77,7 +124,9 @@ export default function Order() {
           stroke-width="1.5"
           stroke="currentColor"
           className="w-5 h-5 cursor-pointer"
-          onClick={handleBack}
+          onClick={(e) => {
+            navigate("/book", { replace: true });
+          }}
         >
           <path
             stroke-linecap="round"
@@ -90,7 +139,7 @@ export default function Order() {
       </div>
       <div className="relative -top-16">
         <div className="flex flex-col gap-4 items-center justify-center">
-          <div className="max-w-xs w-screen shadow-[0px_0px_10px_3px_rgba(0,0,0,0.2)] p-3 rounded-lg">
+          <div className="max-w-xs w-screen shadow-[0px_0px_10px_3px_rgba(0,0,0,0.15)] p-3 rounded-lg">
             <div className="flex flex-row gap-5 justify-between items-center">
               <div>
                 <p className="flex flex-row gap-2 mx-2 text-sm font-medium">
@@ -120,57 +169,86 @@ export default function Order() {
                 <div>
                   <p className="text-gray-700 text-sm dark:text-gray-400">
                     🚍 {bookData.vehicalSize + " ft"} :{" "}
-                    {bookData.bodyType + " Body"}
+                    {bookData.vehicalBodyType + " Body"}
                   </p>
                   <p className="flex flex-row gap-2 text-sm font-medium">
-                    📦 {bookData.materialDetail}
+                    📦 {bookData.goodsType}
                   </p>
                   <p className="flex flex-row gap-2 text-sm font-medium">
-                    ⚖ {bookData.weight}
+                    ⚖ {bookData.goodsWeight} Ton
                   </p>
                   <p className="text-gray-700 text-sm font-medium dark:text-gray-400">
-                    📏{bookData.size}
+                    📏{bookData.goodsSize}
                   </p>
                 </div>
               </div>
             </div>
           </div>
-          <div className="max-w-xs shadow-[0px_0px_10px_3px_rgba(0,0,0,0.2)] p-3 rounded-lg">
+          <div className="max-w-xs shadow-[0px_0px_10px_3px_rgba(0,0,0,0.15)] p-3 rounded-lg">
             <div className="flex flex-row gap-4 p-1 justify-center items-center">
               <div>
-                <p className="font-semibold text-sm">Damage Protection </p>
-                <p className="text-gray-700 text-xs dark:text-gray-400">
-                  Providing protection against accidental damage in transit
-                  <line
-                    className="text-blue cursor-pointer"
-                    onClick={handleLearnMore}
-                  >
-                    {" "}
-                    learn more.
-                  </line>
-                </p>
+                <div>
+                  <p className="font-semibold text-sm">Damage Protection</p>
+                  <p className="text-gray-700 text-xs dark:text-gray-400">
+                    Providing protection against accidental damage during
+                    transit.
+                    <span
+                      className="text-blue cursor-pointer"
+                      onClick={handleLearnMore}
+                    >
+                      {" "}
+                      Learn More.
+                    </span>
+                  </p>
+                </div>
+
                 <div>
                   <p className="text-gray-700 mt-2 text-sm font-semibold dark:text-gray-400">
-                    ₹ 2,000 Any type of material.
+                    ₹ 2,000, Coverage for any type of material.
                   </p>
                 </div>
               </div>
               <div>
                 <button
-                  className="text-xs border border-blue text-blue font-semibold
-               rounded-lg px-3 py-1"
+                  className="text-xs border border-blue text-blue font-semibold rounded-lg px-3 py-1 relative overflow-hidden"
                   onClick={handleCargoInsurance}
                 >
-                  Add
+                  {isInsuranceAddedShow ? (
+                    <>
+                      <svg
+                        className="absolute top-0 left-0 right-0 bottom-0 m-auto w-4 h-4 animate-spin"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zM12 20a8 8 0 008-8h-4a4 4 0 01-4 4v4z"
+                        ></path>
+                      </svg>
+                      <span className="ml-2">Adding...</span>
+                    </>
+                  ) : (
+                    "Add"
+                  )}
                 </button>
               </div>
             </div>
           </div>
-          <div className="max-w-xs w-screen shadow-[0px_0px_10px_3px_rgba(0,0,0,0.2)] p-3 rounded-lg">
+          <div className="max-w-xs w-screen shadow-[0px_0px_10px_3px_rgba(0,0,0,0.15)] p-3 rounded-lg">
             <div className="flex flex-row gap-5 justify-between items-center">
               <div>
                 <p className="flex flex-row gap-2 text-sm font-semibold mb-4">
-                  🛣 Distance : {bookData.distance ? bookData.distance : "0"} km
+                  🛣 Distance : {bookData.distanceKm ? bookData.distanceKm : "0"}{" "}
+                  km
                 </p>
                 <div className="mb-2">
                   <img src={line} alt="alt : line"></img>
@@ -326,7 +404,7 @@ export default function Order() {
         <div className="flex justify-center items-center">
           <button
             className="btn btn-wide mt-6 bg-blue hover:bg-blue"
-            onClick={handleclick}
+            onClick={handleFormSubmit}
           >
             Book Now
           </button>

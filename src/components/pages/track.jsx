@@ -4,24 +4,40 @@ import { useEffect, useState } from "react";
 import ScrollTrack from "./scrollTrack";
 import SearchList from "../pages/serachList";
 import { Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Track({ details }) {
   const [searchFeild, setSearchFeild] = useState("");
-  const [searchShow, setSearchShow] = useState(false);
+  // const [searchShow, setSearchShow] = useState(false);
   const [data, setData] = useState({});
   const [mainData, setMainData] = useState(details);
   const navigate = useNavigate();
 
   useEffect(() => {
+    getData();
+    setMainData(data);
+  }, []);
+
+  const getData = async () => {
+    try {
+      const response = await axios.post("/getOngoingOrderDetails", {
+        email: "example@email.com",
+      });
+      console.log(response.data);
+      setData(response.data);
+      console.log("Ongoing Data", data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
     if (searchFeild.length > 0) {
       setData(
-        details.filter((order) => {
-          return (
-            order.dropoffLocation
-              .toLowerCase()
-              .includes(searchFeild.toLowerCase()) &&
-            order.orderStatus == "ongoing"
-          );
+        mainData.filter((order) => {
+          return order.dropoffLocation
+            .toLowerCase()
+            .includes(searchFeild.toLowerCase());
         })
       );
     } else {
@@ -68,7 +84,7 @@ export default function Track({ details }) {
             type="search"
             id="searchOrders"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Search Order"
+            placeholder="Search Order with Dropoff Location / Goods Types"
             onChange={(e) => setSearchFeild(e.target.value)}
             required
           />

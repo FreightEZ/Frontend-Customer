@@ -3,43 +3,71 @@ import footerMandla from "../../assets/images/footerMandala.svg";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { noteContext } from "../../Context/noteContext";
-// import { Context } from "../Context/context";
+import Geocode from "react-geocode";
+import * as geolib from "geolib";
 
 export default function Book() {
   const [pickupLocation, setPickupLocation] = useState("");
   const [dropoffLocation, setDropoffLocation] = useState("");
   const [dateForPickup, setDateForPickup] = useState("");
-  const [materialDetail, setMaterialDetail] = useState("");
-  const [weight, setWeight] = useState("");
-  const [size, setSize] = useState("");
+  const [goodsType, setGoodsType] = useState("");
+  const [goodsWeight, setGoodsWeight] = useState("");
+  const [goodsSize, setGoodsSize] = useState("");
   const [vehicalSize, setVehicalSize] = useState("");
-  const [bodyType, setBodyType] = useState("");
-  const [distance, setDistance] = useState("");
-
+  const [vehicalBodyType, setVehicalBodyType] = useState("");
+  const [distanceKm, setDistanceKm] = useState("");
+  const [tnc, setTnC] = useState(false);
   const { setbookData } = useContext(noteContext);
 
   const navigate = useNavigate();
+
+  // Set your Google Maps API key here
+  Geocode.setApiKey("AIzaSyA5EDWX1Zp99tW6cnklYp4vDUURgbZVA6o");
+
+  function calculateDistance() {
+    // Fetch the latitude and longitude coordinates of the two cities using Google Maps Geocoding API
+    Geocode.fromAddress(pickupLocation).then((response1) => {
+      const { lat: lat1, lng: lon1 } = response1.results[0].geometry.location;
+
+      Geocode.fromAddress(dropoffLocation).then((response2) => {
+        const { lat: lat2, lng: lon2 } = response2.results[0].geometry.location;
+
+        // Calculate the distance in kilometers between the two cities
+        const distanceKm = geolib.getDistance(
+          { latitude: lat1, longitude: lon1 },
+          { latitude: lat2, longitude: lon2 }
+        );
+
+        // Update the state with the calculated distance
+        setDistanceKm(distanceKm / 1000);
+      });
+    });
+  }
+
+  useEffect(() => {
+    if (pickupLocation.length > 0 && dropoffLocation.length > 0) {
+      calculateDistance();
+    }
+    console.log(distanceKm);
+  }, [tnc]);
 
   const reqBody = {
     pickupLocation: pickupLocation,
     dropoffLocation: dropoffLocation,
     dateForPickup: dateForPickup,
-    materialDetail: materialDetail,
-    weight: weight,
-    size: size,
+    goodsType: goodsType,
+    goodsWeight: goodsWeight,
+    goodsSize: goodsSize,
     vehicalSize: vehicalSize,
-    bodyType: bodyType,
+    vehicalBodyType: vehicalBodyType,
+    distanceKm: distanceKm,
   };
-  // useEffect(() => {}, [checked === true])
+
   function handleFormSubmit(event) {
     event.preventDefault();
-    console.log("Done");
-    // <Context.Provider value={{ bookingDetails: reqBody }}></Context.Provider>;
-    console.log(reqBody);
     setbookData(reqBody);
     navigate("/order");
   }
-  // console.log(reqBody);
   return (
     <div className="relative flex drop-shadow-2xl -top-14 items-center justify-center bg-white max-w-screen rounded-t-2xl">
       <form className="flex flex-col items-center justify-center">
@@ -82,6 +110,7 @@ export default function Book() {
             onChange={(event) => {
               setDateForPickup(event.target.value);
             }}
+            min={new Date().toISOString().split("T")[0]} // Set the minimum date to today's date
             required
           />
         </div>
@@ -97,9 +126,9 @@ export default function Book() {
             id="materialType"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Material Type (e.g. steel, cement etc)"
-            value={materialDetail}
+            value={goodsType}
             onChange={(event) => {
-              setMaterialDetail(event.target.value);
+              setGoodsType(event.target.value);
             }}
             required
           />
@@ -107,25 +136,27 @@ export default function Book() {
         <div className="-mt-5 w-screen max-w-md p-4">
           <input
             type="number"
-            id="weight"
+            id="goodsWeight"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Weight (e.g. 10 ton, 25 ton )"
-            value={weight}
+            value={goodsWeight}
             onChange={(event) => {
-              setWeight(event.target.value);
+              setGoodsWeight(event.target.value);
             }}
+            min={6} // Set the minimum value to 6 (greater than 5)
+            max={100} // Set the maximum value to 100
             required
           />
         </div>
         <div className="-mt-5 w-screen max-w-md p-4">
           <input
             type="text"
-            id="size"
+            id="Size"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Size (L X B X H )"
-            value={size}
+            value={goodsSize}
             onChange={(event) => {
-              setSize(event.target.value);
+              setGoodsSize(event.target.value);
             }}
             required
           />
@@ -138,11 +169,13 @@ export default function Book() {
         </p>
         <div className="-mt-4 w-screen max-w-md p-4">
           <input
-            type="text"
+            type="number"
             id="vehicalSize"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="vehical Size (e.g. 32 ft, 24 ft)"
             value={vehicalSize}
+            min={10}
+            max={100}
             onChange={(event) => {
               setVehicalSize(event.target.value);
             }}
@@ -152,12 +185,12 @@ export default function Book() {
         <div className="-mt-4 w-screen max-w-md p-4">
           <input
             type="text"
-            id="bodyType"
+            id="vehicalBodyType"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Body Type (e.g. close, open, half )"
-            value={bodyType}
+            value={vehicalBodyType}
             onChange={(event) => {
-              setBodyType(event.target.value);
+              setVehicalBodyType(event.target.value);
             }}
             required
           />
@@ -169,7 +202,11 @@ export default function Book() {
               id="link-checkbox"
               type="checkbox"
               value=""
+              checked={tnc}
               className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              onChange={() => {
+                setTnC(!tnc);
+              }}
             />
 
             <label
@@ -207,11 +244,14 @@ export default function Book() {
                       <div className="text-sm">
                         🚍{" "}
                         {vehicalSize.length == 0 ? "NA" : vehicalSize + " ft"} :{" "}
-                        {bodyType.length == 0 ? "NA" : bodyType + " Body"}
+                        {vehicalBodyType.length == 0
+                          ? "NA"
+                          : vehicalBodyType + " Body"}
                       </div>
                       <div className="text-sm font-semibold">
-                        📦 {weight.length == 0 ? "NA" : weight} Ton, Size of
-                        each goods : {size.length == 0 ? "NA" : size}{" "}
+                        📦 {goodsWeight.length == 0 ? "NA" : goodsWeight} Ton,
+                        Size of each goods :{" "}
+                        {goodsSize.length == 0 ? "NA" : goodsSize}{" "}
                       </div>
                     </div>
                   </div>
@@ -220,12 +260,10 @@ export default function Book() {
                   <div className="flex flex-col items-start">
                     <div>
                       <div className="text-sm font-semibold -top-2">
-                        🛣 Distance {distance.length == 0 ? "NA" : distance} km
+                        🛣 Distance {distanceKm.length == 0 ? "NA" : distanceKm}{" "}
+                        km
                       </div>
                     </div>
-                    {/* <div className="text-xs">86</div>
-                    <div className="text-sm font-semibold -top-2">₹ 16,000</div>
-                    <div className="text-xs">₹ 2000/Tonne </div> */}
                   </div>
                   <div className="grid grid-rows-1 gap-2">
                     <div>

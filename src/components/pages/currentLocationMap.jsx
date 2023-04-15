@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ScrollPassedCity from "./scrollPassedCity";
 import PassedCity from "./passedCity";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 const CurrentLocationMap = ({ details }) => {
+  const location = useLocation();
+  const orderId = location.state && location.state.orderId;
+  console.log(orderId);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [passedCities, setPassedCities] = useState(details);
   const navigate = useNavigate();
@@ -70,10 +73,6 @@ const CurrentLocationMap = ({ details }) => {
     }
   }, [currentLocation]);
 
-  function handleBack() {
-    navigate("/track");
-  }
-
   return (
     <div className="w-96">
       {/* <div className="flex justif */}
@@ -85,7 +84,9 @@ const CurrentLocationMap = ({ details }) => {
           stroke-width="1.5"
           stroke="currentColor"
           className="w-5 h-5 cursor-pointer"
-          onClick={handleBack}
+          onClick={(e) => {
+            navigate("/track");
+          }}
         >
           <path
             stroke-linecap="round"
@@ -93,7 +94,7 @@ const CurrentLocationMap = ({ details }) => {
             d="M15.75 19.5L8.25 12l7.5-7.5"
           />
         </svg>
-        <p className="font-semibold text-lg"> OrderX3423 </p>
+        <p className="font-semibold text-sm"> Tracking Order ID : {orderId} </p>
       </div>
       <div className="flex items-end justify-center">
         {currentLocation ? (

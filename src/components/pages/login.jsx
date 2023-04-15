@@ -7,10 +7,6 @@ export default function Login() {
   const [redirect, setRedirect] = useState(false);
   const navigate = useNavigate();
 
-  function handleClick() {
-    navigate("/signup");
-  }
-
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -43,7 +39,6 @@ export default function Login() {
   };
 
   return (
-    // <NodeState.Provider values={{ login: email }}>
     <div className="flex justify-center items-center flex-col">
       <p className="mt-32 font-semibold text-xl">
         Welcome Back to FreightEZ 🙂
@@ -130,12 +125,16 @@ export default function Login() {
       </form>
       <div className="flex mt-4 gap-1 text-md">
         <p>No Account ? </p>
-        <p onClick={handleClick} className="cursor-pointer">
+        <p
+          onClick={(e) => {
+            navigate("/signup");
+          }}
+          className="cursor-pointer"
+        >
           {" "}
           Sign Up Now.
         </p>
       </div>
     </div>
-    // </NodeState.Provider>
   );
 }

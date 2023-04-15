@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import mandala from "../../assets/images/headerMandala.svg";
 import profile from "../../assets/images/profilePhoto.svg";
+import axios from "axios";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -10,44 +11,55 @@ export default function Profile() {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
-  const [password, setPassword] = useState("");
+  const [aboutCompany, setAboutCompany] = useState("");
 
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
+  const getDate = async (event) => {
     try {
       // Send POST request to /register endpoint with form data
-      const response = await axios.post("/register", {
-        fullName,
-        companyName,
-        email,
-        phoneNumber,
-        companyAddress,
-        password,
+      const response = await axios.post("/getProfileDetail", {
+        email: "temp2@email.com",
       });
-
-      // console.log(reqBody, "reqBody");
-      // const response = await fetch("http://127.0.0.1:4000/register", {
-      //   body: JSON.stringify(reqBody),
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      // });
-
-      // const res = await response.json();
 
       // Handle successful response
       console.log(response);
+      setFullName(response.data.fullName);
+      setCompanyName(response.data.companyName);
+      setEmail(response.data.email);
+      setPhoneNumber(response.data.phoneNumber);
+      setCompanyAddress(response.data.companyAddress);
+      setAboutCompany(response.data.aboutCompany);
+
       // Do something with response data, e.g., redirect to another page
     } catch (error) {
       // Handle error
       console.error(error);
     }
   };
+  useEffect(() => {
+    getDate();
+  }, []);
 
-  function handleBack() {
-    navigate("/book");
-  }
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      // Send PUT request to /updateProfileDetail endpoint with form data
+      const response = await axios.put(`/updateProfileDetail/${email}`, {
+        fullName: fullName, // assuming fullName is the updated field name
+        companyName: companyName, // assuming companyName is the updated field name
+        phoneNumber: phoneNumber, // assuming phoneNumber is the updated field name
+        companyAddress: companyAddress, // assuming companyAddress is the updated field name
+        aboutCompany: aboutCompany, // assuming aboutCompany is the updated field name
+      });
+
+      // Handle successful response
+      console.log(response);
+
+      // Do something with response data, e.g., redirect to another page
+    } catch (error) {
+      // Handle error
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -61,7 +73,9 @@ export default function Profile() {
             stroke-width="1.5"
             stroke="currentColor"
             className="w-5 h-5 cursor-pointer"
-            onClick={handleBack}
+            onClick={(e) => {
+              navigate("/book");
+            }}
           >
             <path
               stroke-linecap="round"
@@ -77,7 +91,7 @@ export default function Profile() {
         <img className="-mt-10 w-20 h-20" src={profile}></img>
         <div className="flex flex-col justify-center items-center">
           <div>
-            <form className="flex flex-col -top-4 items-center justify-center">
+            <form className="flex flex-col items-center justify-start min-h-screen">
               <div className="">
                 <label
                   for="fullName"
@@ -146,39 +160,6 @@ export default function Profile() {
                     required
                     value={companyName}
                     onChange={(event) => setCompanyName(event.target.value)}
-                  />
-                </div>
-                <label
-                  for="email"
-                  className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Your Email
-                </label>
-                <div className="relative mb-2">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
-                      />
-                    </svg>
-                  </div>
-                  <input
-                    type="email"
-                    id="email"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Enter your email"
-                    required
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
                   />
                 </div>
 
@@ -254,10 +235,10 @@ export default function Profile() {
                   />
                 </div>
                 <label
-                  for="password"
+                  for="bio"
                   className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Password
+                  About Company
                 </label>
                 <div className="relative mb-1">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -272,18 +253,19 @@ export default function Profile() {
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                        d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
                       />
                     </svg>
                   </div>
-                  <input
-                    type="password"
-                    id="password"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  <textarea
+                    type="text"
+                    id="bio"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 min"
                     placeholder="Enter your secret"
                     required
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
+                    rows="2"
+                    value={aboutCompany}
+                    onChange={(event) => setAboutCompany(event.target.value)}
                   />
                 </div>
               </div>
