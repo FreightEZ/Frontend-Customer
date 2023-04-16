@@ -44,7 +44,7 @@ export default function OrderDetail(state) {
   // Function to handle book now
   const handleBookNow = () => {
     // Navigate to "/book" route with the orderId as a parameter
-    navigate(`/book`);
+    navigate(`/book`, { replace: true });
   };
   return (
     <>
@@ -57,7 +57,15 @@ export default function OrderDetail(state) {
           stroke="currentColor"
           className="w-5 h-5 cursor-pointer"
           onClick={() => {
-            navigate("/pendingOrders", { replace: true });
+            {
+              if (orderData.orderStatus.toLowerCase() === "pending") {
+                navigate("/pendingOrders", { replace: true });
+              } else if (orderData.orderStatus.toLowerCase() === "ongoing") {
+                navigate("/track", { replace: true });
+              } else {
+                navigate("/previousOrders", { replace: true });
+              }
+            }
           }}
         >
           <path

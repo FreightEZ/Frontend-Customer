@@ -12,7 +12,7 @@ export default function SearchList({ filteredOrder }) {
   };
 
   return (
-    <div className="min-w-fit">
+    <div className="min-w-fit max-h-screen">
       {filteredOrder.length > 0 ? (
         filteredOrder.map((filter) => {
           return (
@@ -50,7 +50,9 @@ export default function SearchList({ filteredOrder }) {
           );
         })
       ) : (
-        <div>No orders found.</div>
+        <div className="flex items-center justify-center font-semibold text-lg">
+          No orders found !
+        </div>
       )}
     </div>
   );

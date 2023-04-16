@@ -6,17 +6,10 @@ import SearchList from "../pages/serachList";
 import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function PreviousOrders({ details }) {
+export default function PreviousOrders() {
   const [searchFeild, setSearchFeild] = useState("");
   const [data, setData] = useState({});
-  const [mainData, setMainData] = useState(details);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    getData();
-    setMainData(data);
-  }, []);
-
   const getData = async () => {
     try {
       const response = await axios.post("/getPreviousOrderDetails", {
@@ -31,16 +24,24 @@ export default function PreviousOrders({ details }) {
   };
 
   useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
     if (searchFeild.length > 0) {
       setData(
-        mainData.filter((order) => {
-          return order.dropoffLocation
-            .toLowerCase()
-            .includes(searchFeild.toLowerCase());
+        data.filter((order) => {
+          return (
+            order.dropoffLocation
+              .toLowerCase()
+              .includes(searchFeild.toLowerCase()) ||
+            order.goodsType.toLowerCase().includes(searchFeild.toLowerCase())
+          );
         })
       );
     } else {
-      setData(details);
+      getData();
+      setData(data);
     }
   }, [searchFeild]);
   function searchList() {

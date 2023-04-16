@@ -6,44 +6,44 @@ import SearchList from "../pages/serachList";
 import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function Track({ details }) {
+export default function Track() {
   const [searchFeild, setSearchFeild] = useState("");
-  // const [searchShow, setSearchShow] = useState(false);
-  const [data, setData] = useState({});
-  const [mainData, setMainData] = useState(details);
+  const [data, setData] = useState([]);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    getData();
-    setMainData(data);
-  }, []);
 
   const getData = async () => {
     try {
       const response = await axios.post("/getOngoingOrderDetails", {
         email: "example@email.com",
       });
-      console.log(response.data);
       setData(response.data);
       console.log("Ongoing Data", data);
     } catch (error) {
       console.log(error);
     }
   };
+  useEffect(() => {
+    getData();
+  }, []);
 
   useEffect(() => {
     if (searchFeild.length > 0) {
       setData(
-        mainData.filter((order) => {
-          return order.dropoffLocation
-            .toLowerCase()
-            .includes(searchFeild.toLowerCase());
+        data.filter((order) => {
+          return (
+            order.dropoffLocation
+              .toLowerCase()
+              .includes(searchFeild.toLowerCase()) ||
+            order.goodsType.toLowerCase().includes(searchFeild.toLowerCase())
+          );
         })
       );
     } else {
-      setData(details);
+      getData();
+      setData(data);
     }
   }, [searchFeild]);
+
   function searchList() {
     return (
       <ScrollTrack>
@@ -52,7 +52,7 @@ export default function Track({ details }) {
     );
   }
   function handleBack() {
-    navigate("/book");
+    navigate("/book", { replace: true });
   }
   return (
     <div className="relative flex drop-shadow-2xl -top-14 items-center justify-center bg-white max-w-screen rounded-t-2xl">
