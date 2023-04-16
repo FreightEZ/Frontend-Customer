@@ -4,6 +4,8 @@ import axios from "axios";
 import line from "../../assets/images/line.svg";
 import { noteContext } from "../../Context/noteContext";
 import { useContext } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 export default function OrderDetail(state) {
   const navigate = useNavigate();
@@ -30,10 +32,28 @@ export default function OrderDetail(state) {
       // Send Axios DELETE request to delete order by ID
       const response = await axios.delete(`/order/${orderId}`);
 
-      // Handle successful deletion
-      console.log("Order deleted successfully:", response.data);
-      // Update UI or take any other necessary action
-      navigate("/pendingOrders", { replace: true });
+      if (response.status == 200) {
+        toast.success(response.data, {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        setInterval(() => {
+          navigate("/pendingOrders");
+        }, 2000);
+      } else {
+        toast.error(response.data, {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      }
     } catch (error) {
       // Handle error
       console.error("Failed to delete order:", error);
@@ -44,11 +64,12 @@ export default function OrderDetail(state) {
   // Function to handle book now
   const handleBookNow = () => {
     // Navigate to "/book" route with the orderId as a parameter
-    navigate(`/book`, { replace: true });
+    navigate("/book");
   };
   return (
-    <>
-      <div className="relative flex max-w-screen bg-white -top-14 items-center rounded-t-2xl p-4">
+    <div>
+      <ToastContainer />
+      <div className="relative flex max-w-sm bg-white -top-14 items-center rounded-t-2xl p-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -59,11 +80,11 @@ export default function OrderDetail(state) {
           onClick={() => {
             {
               if (orderData.orderStatus.toLowerCase() === "pending") {
-                navigate("/pendingOrders", { replace: true });
+                navigate("/pendingOrders");
               } else if (orderData.orderStatus.toLowerCase() === "ongoing") {
-                navigate("/track", { replace: true });
+                navigate("/track");
               } else {
-                navigate("/previousOrders", { replace: true });
+                navigate("/previousOrders");
               }
             }
           }}
@@ -78,7 +99,7 @@ export default function OrderDetail(state) {
         <p className="font-semibold"> Order ID : {orderData._id}</p>
       </div>
       <div className="relative -top-16 ">
-        <div className="flex flex-col gap-2 items-center justify-center">
+        <div className="flex flex-col gap-2 mx-4 items-center justify-center">
           <div className="max-w-xs w-screen shadow-[0px_0px_10px_3px_rgba(0,0,0,0.2)] p-4 rounded-lg">
             <div className="mb-4">
               <p className="flex flex-row gap-2 text-sm font-medium">
@@ -214,6 +235,6 @@ export default function OrderDetail(state) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

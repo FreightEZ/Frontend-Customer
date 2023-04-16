@@ -55,9 +55,12 @@ export default function PreviousOrders() {
     navigate("/book");
   }
   return (
-    <div className="relative flex drop-shadow-2xl -top-14 items-center justify-center bg-white max-w-screen rounded-t-2xl">
+    <div
+      className="relative flex drop-shadow-2xl -top-14 items-start justify-center bg-white max-w-sm
+     rounded-t-2xl"
+    >
       <div className="flex flex-col items-center justify-center max-h-screen">
-        <p className="flex flex-row  items-center mt-5 mb-4 w-screen max-w-md px-4 font-semibold">
+        <p className="flex flex-row  items-center mt-5 mb-4 w-full max-w-sm px-2 font-semibold">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -73,13 +76,13 @@ export default function PreviousOrders() {
               d="M15.75 19.5L8.25 12l7.5-7.5"
             />
           </svg>
-          Previous Order
+          Completed Orders
         </p>
         <div className="relative -top-2">
           <img src={line} alt="alt : line"></img>
         </div>
 
-        <div className="-mt-4 w-screen max-w-md p-4">
+        <div className="-mt-4 w-screen max-w-sm p-4">
           <input
             type="search"
             id="searchOrders"

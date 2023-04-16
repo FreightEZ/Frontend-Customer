@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useJsApiLoader } from "@react-google-maps/api";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 export default function Signup() {
   const [fullName, setFullName] = useState("");
   const [companyName, setCompanyName] = useState("");
+  const [aboutCompany, setAboutCompany] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
   const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
 
   const handleFormSubmit = async (event) => {
@@ -19,29 +22,58 @@ export default function Signup() {
       const response = await axios.post("/register", {
         fullName,
         companyName,
+        aboutCompany,
         email,
         phoneNumber,
         companyAddress,
         password,
       });
-      // Handle successful response
-      console.log(response);
+      if (response.status === 200) {
+        toast.success(response.data, {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        setInterval(() => {
+          navigate("/login");
+        }, 2000);
+      } else {
+        toast.error(response.data, {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      }
       // Do something with response data, e.g., redirect to another page
     } catch (error) {
       // Handle error
-      console.error(error);
+      toast.error(error, {
+        position: "bottom-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
   return (
     <div className="flex flex-col justify-center items-center">
+      <ToastContainer />
       <div>
-        <p className="mt-10 p-3 font-bold text-xl text-center ">
+        <p className="mt-10 p-4 font-bold text-xl text-center ">
           Sign up, to BOOK your goods Shipment 🚚{" "}
         </p>
       </div>
       <div>
-        <form className="flex flex-col -top-4 items-center justify-center">
+        <form className="flex flex-col -top-7 items-center justify-center">
           <div className="m-4">
             <label
               for="fullName"
@@ -110,6 +142,40 @@ export default function Signup() {
                 required
                 value={companyName}
                 onChange={(event) => setCompanyName(event.target.value)}
+              />
+            </div>
+            <label
+              for="bio"
+              className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              About Company
+            </label>
+            <div className="relative mb-1">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-5 h-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+                  />
+                </svg>
+              </div>
+              <textarea
+                type="text"
+                id="bio"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 min"
+                placeholder="Enter your secret"
+                required
+                rows="2"
+                value={aboutCompany}
+                onChange={(event) => setAboutCompany(event.target.value)}
               />
             </div>
             <label
@@ -259,7 +325,7 @@ export default function Signup() {
           </button>
         </form>
       </div>
-      <div className="flex mt-4 gap-1 text-md">
+      <div className="flex mt-4 mb-7 gap-1 text-md cursor-pointer">
         <p>Already had one ? </p>
         <p
           onClick={(e) => {

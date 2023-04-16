@@ -10,14 +10,34 @@ export default function DamageProtection() {
 
   return (
     <>
-      <div className="relative flex flex-col max-w-screen bg-white -top-14 items-center rounded-t-2xl p-4">
-        <div className="relative mx-1">
+      <div className="relative flex flex-col max-w-screen bg-white -top-14 items-start rounded-t-2xl p-4">
+        <div
+          className="flex -mx-2
+         items-center justify-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            className="w-5 h-5 cursor-pointer"
+            onClick={(e) => {
+              navigate(-1);
+            }}
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5"
+            />
+          </svg>
           <p className="font-bold">Damage Protection</p>
-          <p className="my-2 text-xs mx-2">
-            Cargo insurance is a feature that applies to your consignment,
-            providing protection against accidental damage in transit.
-          </p>
         </div>
+        <p className="my-2 text-xs mx-2">
+          Cargo insurance is a feature that applies to your consignment,
+          providing protection against accidental damage in transit.
+        </p>
         <div className="m-2">
           <img src={line} alt="alt : line"></img>
         </div>

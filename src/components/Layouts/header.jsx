@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import mandala from "../../assets/images/headerMandala.svg";
 import profile from "../../assets/images/profilePhoto.svg";
@@ -10,9 +10,13 @@ export default function Header() {
   function handleProfile() {
     navigate("/profile");
   }
+  const handleLogout = () => {
+    navigate("/login", { replace: true });
+  };
+
   return (
     <div>
-      <div>
+      <div className="">
         <img src={mandala} alt="alt : Mandala Pattern"></img>
         <div
           className="absolute left-7 top-11 cursor-pointer"
@@ -56,7 +60,12 @@ export default function Header() {
                     navigate("/previousOrders");
                   }}
                 >
-                  Previous Orders
+                  Completed Orders
+                </a>
+              </li>
+              <li>
+                <a className="text-red" onClick={handleLogout}>
+                  Log out
                 </a>
               </li>
             </ul>

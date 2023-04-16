@@ -5,6 +5,8 @@ import line from "../../assets/images/line.svg";
 import { noteContext } from "../../Context/noteContext";
 import { useContext } from "react";
 import moment from "moment";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 export default function Order() {
   const [isInsuranceAdded, setIsInsuranceAdded] = useState(false);
@@ -16,9 +18,7 @@ export default function Order() {
   const [orderStatus, setOrderStatus] = useState(""); // state to store the orderStatus
   const [isDone, setIsDone] = useState(false);
   const [isInsuranceAddedShow, setIsInsuranceAddedShow] = useState(false);
-
-  // const [sim, setSim] = useState(true);
-  console.log();
+  const [expectedDeliveryDate, setExpectedDeliveryDate] = useState("NA");
   const navigate = useNavigate();
   const { bookData } = useContext(noteContext);
   console.log("🚀 ~ file: order.jsx:10 ~ Order ~ bookData:", bookData);
@@ -71,15 +71,42 @@ export default function Order() {
     });
   };
 
-  console.log(paymentVia);
-  console.log(paymentMode);
+  function calculateDeliveryDate(
+    pickupDate,
+    distance,
+    averageSpeed,
+    contingencyTime
+  ) {
+    // Calculate transit time in hours
+    const transitTimeHours = distance / averageSpeed;
+
+    // Calculate estimated delivery date in milliseconds
+    const estimatedDeliveryDateMillis =
+      new Date(pickupDate).getTime() + transitTimeHours * 60 * 60 * 1000; // Convert hours to milliseconds
+
+    // Add contingency time to estimated delivery date
+    const estimatedDeliveryDateWithContingency = new Date(
+      estimatedDeliveryDateMillis + contingencyTime * 60 * 60 * 1000
+    ); // Convert hours to milliseconds
+
+    return estimatedDeliveryDateWithContingency;
+  }
 
   useEffect(() => {
     setPaymentStatus("Pending");
     setOrderDate(moment().format("YYYY-MM-DD"));
     setOrderTime(moment().format("hh:mm:ss"));
     setOrderStatus("Pending");
+    // const val = calculateDeliveryDate(
+    //   bookData.dateForPickup,
+    //   bookData.distanceKm,
+    //   70,
+    //   84600000
+    // );
+    // setExpectedDeliveryDate(val);
+    // console.log("Expected Delivery Date : ", val);
   }, []);
+
   function handleLearnMore(e) {
     navigate("/insurance");
   }
@@ -91,7 +118,6 @@ export default function Order() {
       const response = await axios.post("/orderDetails", {
         email: "example@email.com",
         ...bookData,
-
         isInsuranceAdded: isInsuranceAdded,
         paymentMode: paymentMode,
         paymentVia: paymentVia,
@@ -103,20 +129,48 @@ export default function Order() {
 
       // Handle successful response
       console.log(response);
-      if (response.status == 200) {
-        // navigate("/success");
+      if (response.status == 201) {
+        toast.success("Order placed Succesfully", {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        setInterval(() => {
+          navigate("/success");
+        }, 2000);
+      } else {
+        toast.error("Order not placed", {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       }
       // Do something with response data, e.g., redirect to another page
     } catch (error) {
       // Handle error
-      console.error(error);
+      toast.error(error, {
+        position: "bottom-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
+
   console.log(bookData.pickupLocation);
 
   return (
-    <>
-      <div className="relative flex max-w-screen bg-white -top-14 items-center rounded-t-2xl p-4">
+    <div>
+      <ToastContainer />
+      <div className="relative flex max-w-sm bg-white -top-14 items-center rounded-t-2xl p-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -125,7 +179,7 @@ export default function Order() {
           stroke="currentColor"
           className="w-5 h-5 cursor-pointer"
           onClick={(e) => {
-            navigate("/book", { replace: true });
+            navigate("/book");
           }}
         >
           <path
@@ -138,9 +192,9 @@ export default function Order() {
         <p className="font-semibold"> Order Summary</p>
       </div>
       <div className="relative -top-16">
-        <div className="flex flex-col gap-4 items-center justify-center">
-          <div className="max-w-xs w-screen shadow-[0px_0px_10px_3px_rgba(0,0,0,0.15)] p-3 rounded-lg">
-            <div className="flex flex-row gap-5 justify-between items-center">
+        <div className="flex flex-col gap-4 mx-8 items-start justify-center">
+          <div className="max-w-xs w-[80vw] shadow-[0px_0px_10px_3px_rgba(0,0,0,0.15)] p-3 rounded-lg">
+            <div className="flex flex-row gap-12 justify-between items-center">
               <div>
                 <p className="flex flex-row gap-2 mx-2 text-sm font-medium">
                   📍 {bookData.pickupLocation}
@@ -243,7 +297,7 @@ export default function Order() {
               </div>
             </div>
           </div>
-          <div className="max-w-xs w-screen shadow-[0px_0px_10px_3px_rgba(0,0,0,0.15)] p-3 rounded-lg">
+          <div className="max-w-xs shadow-[0px_0px_10px_3px_rgba(0,0,0,0.15)] p-3 rounded-lg">
             <div className="flex flex-row gap-5 justify-between items-center">
               <div>
                 <p className="flex flex-row gap-2 text-sm font-semibold mb-4">
@@ -254,8 +308,8 @@ export default function Order() {
                   <img src={line} alt="alt : line"></img>
                 </div>
                 <div className="flex flex-row gap-2 text-sm font-semibold mb-4">
-                  <p>🕰 Estimated Date :</p>
-                  <p>{bookData.dateForPickup}</p>
+                  <p>🕰 Estimated Date : </p>
+                  <p>{expectedDeliveryDate}</p>
                 </div>
               </div>
             </div>
@@ -266,10 +320,10 @@ export default function Order() {
         <img src={line} alt="alt : line"></img>
       </div>
 
-      <p className="flex relative -top-12 m-2 w-screen max-w-md px-6 font-semibold">
+      <p className="flex relative -top-12 m-2 w-screen max-w-sm px-6 font-semibold">
         Payment
       </p>
-      <div className="relative -top-14 mt-6 mx-8 mb-3">
+      <div className="relative -top-14 mt-6 mx-8 mb-3 max-s-sm ">
         <p className="-mt-3 mx-4">Mode</p>
         <div
           id="modeDiv"
@@ -410,6 +464,6 @@ export default function Order() {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

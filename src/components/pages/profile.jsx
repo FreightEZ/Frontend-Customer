@@ -4,6 +4,9 @@ import mandala from "../../assets/images/headerMandala.svg";
 import profile from "../../assets/images/profilePhoto.svg";
 import axios from "axios";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+
 export default function Profile() {
   const navigate = useNavigate();
   const [fullName, setFullName] = useState("");
@@ -50,6 +53,25 @@ export default function Profile() {
         companyAddress: companyAddress, // assuming companyAddress is the updated field name
         aboutCompany: aboutCompany, // assuming aboutCompany is the updated field name
       });
+      if (response.status == 200) {
+        toast.success(response.data, {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      } else {
+        toast.error(response.data, {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      }
 
       // Handle successful response
       console.log(response);
@@ -58,12 +80,21 @@ export default function Profile() {
     } catch (error) {
       // Handle error
       console.error(error);
+      toast.error(error, {
+        position: "bottom-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
   return (
-    <>
-      <div>
+    <div>
+      <ToastContainer />
+      <div className="max-w-sm">
         <img src={mandala} alt="mandla pattern"></img>
         <div className="relative flex max-w-screen bg-white -top-14 items-center rounded-t-2xl p-4">
           <svg
@@ -73,7 +104,7 @@ export default function Profile() {
             stroke-width="1.5"
             stroke="currentColor"
             className="w-5 h-5 cursor-pointer"
-            onClick={(e) => {
+            onClick={() => {
               navigate("/book");
             }}
           >
@@ -279,6 +310,6 @@ export default function Profile() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

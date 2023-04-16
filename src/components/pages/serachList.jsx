@@ -12,7 +12,7 @@ export default function SearchList({ filteredOrder }) {
   };
 
   return (
-    <div className="min-w-fit max-h-screen">
+    <div className="max-w-sm max-h-screen mx-1">
       {filteredOrder.length > 0 ? (
         filteredOrder.map((filter) => {
           return (

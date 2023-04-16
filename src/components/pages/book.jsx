@@ -16,11 +16,9 @@ export default function Book() {
   const [vehicalSize, setVehicalSize] = useState("");
   const [vehicalBodyType, setVehicalBodyType] = useState("");
   const [distanceKm, setDistanceKm] = useState("");
-  const [tnc, setTnC] = useState(false);
+  const [tnC, setTnC] = useState(false);
   const { setbookData } = useContext(noteContext);
-
   const navigate = useNavigate();
-
   // Set your Google Maps API key here
   Geocode.setApiKey("AIzaSyA5EDWX1Zp99tW6cnklYp4vDUURgbZVA6o");
 
@@ -44,12 +42,9 @@ export default function Book() {
     });
   }
 
-  useEffect(() => {
-    if (pickupLocation.length > 0 && dropoffLocation.length > 0) {
-      calculateDistance();
-    }
-    console.log(distanceKm);
-  }, [tnc]);
+  if (pickupLocation.length > 0 && dropoffLocation.length > 0) {
+    calculateDistance();
+  }
 
   const reqBody = {
     pickupLocation: pickupLocation,
@@ -69,12 +64,16 @@ export default function Book() {
     navigate("/order");
   }
   return (
-    <div className="relative flex drop-shadow-2xl -top-14 items-center justify-center bg-white max-w-screen rounded-t-2xl">
-      <form className="flex flex-col items-center justify-center">
-        <p className="mt-5 w-screen max-w-md px-4 font-semibold">
+    <div
+      className="relative flex drop-shadow-2xl -top-14 items-strat
+       justify-center bg-white max-w-sm
+     rounded-t-2xl"
+    >
+      <form className="flex flex-col items-start justify-start">
+        <p className="mt-5 w-screen max-w-sm px-5 font-semibold">
           Location Details
         </p>
-        <div className="-mt-3 w-screen max-w-md p-4">
+        <div className="w-screen max-w-sm p-4">
           <input
             type="text"
             id="pickupLocation"
@@ -87,7 +86,7 @@ export default function Book() {
             required
           />
         </div>
-        <div className="-mt-5 w-screen max-w-md p-4">
+        <div className="-mt-5 w-screen max-w-sm p-4">
           <input
             type="text"
             id="dropoffLocation"
@@ -100,7 +99,7 @@ export default function Book() {
             required
           />
         </div>
-        <div className="-mt-5 w-screen max-w-md p-4">
+        <div className="-mt-5 w-screen max-w-sm p-4">
           <input
             type="date"
             id="dateForPickup"
@@ -117,10 +116,10 @@ export default function Book() {
         <div className="mb-2">
           <img src={line} alt="alt : line"></img>
         </div>
-        <p className="mb-2 w-screen max-w-md px-4 font-semibold">
+        <p className="mb-2 w-screen max-w-sm px-4 font-semibold">
           Goods Details
         </p>
-        <div className="-mt-5 w-screen max-w-md p-4">
+        <div className="-mt-5 w-screen max-w-sm p-4">
           <input
             type="text"
             id="materialType"
@@ -133,7 +132,7 @@ export default function Book() {
             required
           />
         </div>
-        <div className="-mt-5 w-screen max-w-md p-4">
+        <div className="-mt-5 w-screen max-w-sm p-4">
           <input
             type="number"
             id="goodsWeight"
@@ -148,7 +147,7 @@ export default function Book() {
             required
           />
         </div>
-        <div className="-mt-5 w-screen max-w-md p-4">
+        <div className="-mt-5 w-screen max-w-sm p-4">
           <input
             type="text"
             id="Size"
@@ -164,10 +163,10 @@ export default function Book() {
         <div className="mb-2">
           <img src={line} alt="alt : line"></img>
         </div>
-        <p className="mb-2 w-screen max-w-md px-4 font-semibold">
+        <p className="mb-2 w-screen max-w-sm px-4 font-semibold">
           Vehicle Requirement
         </p>
-        <div className="-mt-4 w-screen max-w-md p-4">
+        <div className="-mt-4 w-screen max-w-sm p-4">
           <input
             type="number"
             id="vehicalSize"
@@ -182,7 +181,7 @@ export default function Book() {
             required
           />
         </div>
-        <div className="-mt-4 w-screen max-w-md p-4">
+        <div className="-mt-4 w-screen max-w-sm p-4">
           <input
             type="text"
             id="vehicalBodyType"
@@ -196,16 +195,16 @@ export default function Book() {
           />
         </div>
 
-        <div className="-top-3">
+        <div className="-top-3 ml-5">
           <div className="flex items-center">
             <input
               id="link-checkbox"
               type="checkbox"
               value=""
-              checked={tnc}
+              checked={tnC}
               className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
               onChange={() => {
-                setTnC(!tnc);
+                setTnC(!tnC);
               }}
             />
 
@@ -219,7 +218,9 @@ export default function Book() {
                 className="text-blue-600 dark:text-blue-500 hover:underline"
               >
                 {" "}
-                terms and conditions
+                <span className="text-blue cursor-pointer">
+                  Terms and Conditions
+                </span>
               </a>
               .
             </label>
@@ -269,8 +270,7 @@ export default function Book() {
                     <div>
                       <button
                         type="submit"
-                        className="text-white bg-blue hover:bg-blue focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
-                        w-[8rem]"
+                        className="text-white bg-blue hover:bg-blue focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         onClick={handleFormSubmit}
                       >
                         Proceed

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [redirect, setRedirect] = useState(false);
   const navigate = useNavigate();
 
   const handleFormSubmit = async (event) => {
@@ -12,7 +14,7 @@ export default function Login() {
     try {
       // Send POST request to /register endpoint with form data
       const response = await axios.post(
-        "/login  ",
+        "/login",
         {
           email,
           password,
@@ -21,29 +23,48 @@ export default function Login() {
       );
       // Handle successful response
       console.log(response);
-      if (response.data === "user not found") {
-        alert("user not found");
+      if (response.status == 200) {
+        toast.success(response.data, {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        setInterval(() => {
+          navigate("/book");
+        }, 2000);
       } else {
-        setRedirect(true);
-        // console.log(redirect);
-      }
-      // Do something with response data, e.g., redirect to another page
-      if (redirect === true) {
-        alert("login Successful");
-        navigate("/book");
+        toast.error(response.data, {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       }
     } catch (error) {
       // Handle error
-      console.error(error);
+      toast.error(error, {
+        position: "bottom-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
   return (
     <div className="flex justify-center items-center flex-col">
-      <p className="mt-32 font-semibold text-xl">
+      <ToastContainer />
+      <p className="mt-28 font-semibold text-xl">
         Welcome Back to FreightEZ 🙂
       </p>
-      <form className="flex flex-col items-center justify-center mt-10">
+      <form className="flex flex-col items-center justify-center mt-8">
         <div className="">
           <label
             for="email"
@@ -124,7 +145,7 @@ export default function Login() {
         </button>
       </form>
       <div className="flex mt-4 gap-1 text-md">
-        <p>No Account ? </p>
+        <p>Need an Account ? </p>
         <p
           onClick={(e) => {
             navigate("/signup");

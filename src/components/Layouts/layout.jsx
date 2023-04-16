@@ -7,9 +7,8 @@ import Header from "../Layouts/header";
  */
 
 export default function Layout1() {
-  const router = useLocation();
   return (
-    <div className=" flex flex-col max-h-screen max-w-md ">
+    <div className="flex flex-col max-h-screen max-w-md">
       <Header />
       <div>
         <Outlet />
