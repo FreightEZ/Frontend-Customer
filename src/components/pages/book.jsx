@@ -17,11 +17,11 @@ export default function Book() {
   const [vehicalBodyType, setVehicalBodyType] = useState("");
   const [distanceKm, setDistanceKm] = useState("");
   const [tnC, setTnC] = useState(false);
-  const { setbookData } = useContext(noteContext);
+  const { emailLog, setbookData } = useContext(noteContext);
   const navigate = useNavigate();
   // Set your Google Maps API key here
   Geocode.setApiKey("AIzaSyA5EDWX1Zp99tW6cnklYp4vDUURgbZVA6o");
-
+  // window.location.reload();
   function calculateDistance() {
     // Fetch the latitude and longitude coordinates of the two cities using Google Maps Geocoding API
     Geocode.fromAddress(pickupLocation).then((response1) => {
@@ -42,11 +42,14 @@ export default function Book() {
     });
   }
 
-  if (pickupLocation.length > 0 && dropoffLocation.length > 0) {
-    calculateDistance();
-  }
+  useEffect(() => {
+    if (pickupLocation.length > 0 && dropoffLocation.length > 0) {
+      calculateDistance();
+    }
+  }, [tnC]);
 
   const reqBody = {
+    email: emailLog,
     pickupLocation: pickupLocation,
     dropoffLocation: dropoffLocation,
     dateForPickup: dateForPickup,
@@ -58,11 +61,17 @@ export default function Book() {
     distanceKm: distanceKm,
   };
 
-  function handleFormSubmit(event) {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
+    console.log(event);
     setbookData(reqBody);
     navigate("/order");
-  }
+  };
+
+  const handletnc = () => {
+    navigate("/tnc");
+  };
+
   return (
     <div
       className="relative flex drop-shadow-2xl -top-14 items-strat
@@ -213,12 +222,12 @@ export default function Book() {
               className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
             >
               I agree with the{" "}
-              <a
-                href="#"
-                className="text-blue-600 dark:text-blue-500 hover:underline"
-              >
+              <a className="text-blue-600 dark:text-blue-500 hover:underline">
                 {" "}
-                <span className="text-blue cursor-pointer">
+                <span
+                  className="text-blue cursor-pointer"
+                  onClick={() => handletnc()}
+                >
                   Terms and Conditions
                 </span>
               </a>
@@ -271,7 +280,7 @@ export default function Book() {
                       <button
                         type="submit"
                         className="text-white bg-blue hover:bg-blue focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                        onClick={handleFormSubmit}
+                        onClick={(event) => handleFormSubmit(event)}
                       >
                         Proceed
                       </button>

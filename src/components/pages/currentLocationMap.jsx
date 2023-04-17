@@ -72,6 +72,9 @@ const CurrentLocationMap = ({ details }) => {
       document.head.appendChild(script);
     }
   }, [currentLocation]);
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   return (
     <div className="w-96">
@@ -84,9 +87,7 @@ const CurrentLocationMap = ({ details }) => {
           stroke-width="1.5"
           stroke="currentColor"
           className="w-5 h-5 cursor-pointer"
-          onClick={(e) => {
-            navigate("/track");
-          }}
+          onClick={() => handleBack()}
         >
           <path
             stroke-linecap="round"

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import mandala from "../../assets/images/headerMandala.svg";
 import profile from "../../assets/images/profilePhoto.svg";
 import axios from "axios";
-
+import { noteContext } from "../../Context/noteContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
@@ -15,12 +15,13 @@ export default function Profile() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
   const [aboutCompany, setAboutCompany] = useState("");
-
+  const { emailLog } = useContext(noteContext);
+  console.log("email note context: ", emailLog);
   const getDate = async (event) => {
     try {
       // Send POST request to /register endpoint with form data
       const response = await axios.post("/getProfileDetail", {
-        email: "temp2@email.com",
+        email: emailLog,
       });
 
       // Handle successful response
@@ -91,6 +92,10 @@ export default function Profile() {
     }
   };
 
+  const handleBack = () => {
+    navigate("/book");
+  };
+
   return (
     <div>
       <ToastContainer />
@@ -104,9 +109,7 @@ export default function Profile() {
             stroke-width="1.5"
             stroke="currentColor"
             className="w-5 h-5 cursor-pointer"
-            onClick={() => {
-              navigate("/book");
-            }}
+            onClick={() => handleBack()}
           >
             <path
               stroke-linecap="round"
@@ -139,7 +142,7 @@ export default function Profile() {
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="w-5 h-5"
+                      className="w-5 h-5"
                     >
                       <path
                         stroke-linecap="round"
@@ -174,7 +177,7 @@ export default function Profile() {
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="w-5 h-5"
+                      className="w-5 h-5"
                     >
                       <path
                         stroke-linecap="round"
@@ -208,7 +211,7 @@ export default function Profile() {
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="w-5 h-5"
+                      className="w-5 h-5"
                     >
                       <path
                         stroke-linecap="round"
@@ -241,7 +244,7 @@ export default function Profile() {
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="w-5 h-5"
+                      className="w-5 h-5"
                     >
                       <path
                         stroke-linecap="round"
@@ -279,7 +282,7 @@ export default function Profile() {
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="w-5 h-5"
+                      className="w-5 h-5"
                     >
                       <path
                         stroke-linecap="round"

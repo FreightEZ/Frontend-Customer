@@ -1,20 +1,22 @@
 import line from "../../assets/images/line.svg";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ScrollTrack from "./scrollTrack";
 import SearchList from "../pages/serachList";
 import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { noteContext } from "../../Context/noteContext";
 
 export default function PendingOrders() {
   const [searchFeild, setSearchFeild] = useState("");
   const [data, setData] = useState([]);
   const navigate = useNavigate();
+  const { emailLog } = useContext(noteContext);
 
   const getData = async () => {
     try {
       const response = await axios.post("/getPendingOrderDetails", {
-        email: "example@email.com",
+        email: emailLog,
       });
       setData(response.data);
       console.log("pending data :", data);
@@ -68,7 +70,7 @@ export default function PendingOrders() {
             stroke-width="1.5"
             stroke="currentColor"
             className="w-5 h-5 cursor-pointer"
-            onClick={handleBack}
+            onClick={() => handleBack()}
           >
             <path
               stroke-linecap="round"

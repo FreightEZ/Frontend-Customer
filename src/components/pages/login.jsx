@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { noteContext } from "../../Context/noteContext";
+import { useContext } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setEmailLog } = useContext(noteContext);
   const navigate = useNavigate();
+
+  const handleNavSignup = () => {
+    navigate("/signup");
+  };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -21,6 +28,7 @@ export default function Login() {
         },
         { withCredentials: true }
       );
+      setEmailLog(email);
       // Handle successful response
       console.log(response);
       if (response.status == 200) {
@@ -32,10 +40,11 @@ export default function Login() {
           pauseOnHover: true,
           draggable: true,
         });
-        setInterval(() => {
-          navigate("/book");
-        }, 2000);
-      } else {
+        await new Promise((r) => setTimeout(r, 2000));
+        // setInterval(() => {
+        navigate("/book");
+        // }, 2000);
+      } else if (response.status == 404) {
         toast.error(response.data, {
           position: "bottom-center",
           autoClose: 1000,
@@ -80,7 +89,7 @@ export default function Login() {
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="w-5 h-5"
+                className="w-5 h-5"
               >
                 <path
                   stroke-linecap="round"
@@ -115,7 +124,7 @@ export default function Login() {
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="w-5 h-5"
+                className="w-5 h-5"
               >
                 <path
                   stroke-linecap="round"
@@ -138,20 +147,15 @@ export default function Login() {
           </div>
         </div>
         <button
-          className="btn btn-wide mt-3 bg-blue hover:bg-blue"
-          onClick={handleFormSubmit}
+          className="btn btn-wide mt-5 bg-blue hover:bg-blue"
+          onClick={(event) => handleFormSubmit(event)}
         >
           Login
         </button>
       </form>
-      <div className="flex mt-4 gap-1 text-md">
+      <div className="flex mt-5 gap-1 text-md">
         <p>Need an Account ? </p>
-        <p
-          onClick={(e) => {
-            navigate("/signup");
-          }}
-          className="cursor-pointer"
-        >
+        <p onClick={() => handleNavSignup()} className="cursor-pointer">
           {" "}
           Sign Up Now.
         </p>

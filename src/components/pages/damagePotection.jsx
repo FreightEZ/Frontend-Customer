@@ -7,6 +7,9 @@ import { useContext } from "react";
 export default function DamageProtection() {
   const navigate = useNavigate();
   const { bookData } = useContext(noteContext);
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   return (
     <>
@@ -22,9 +25,7 @@ export default function DamageProtection() {
             stroke-width="1.5"
             stroke="currentColor"
             className="w-5 h-5 cursor-pointer"
-            onClick={(e) => {
-              navigate(-1);
-            }}
+            onClick={() => handleBack()}
           >
             <path
               stroke-linecap="round"

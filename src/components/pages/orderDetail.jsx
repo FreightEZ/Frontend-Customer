@@ -32,6 +32,11 @@ export default function OrderDetail(state) {
       // Send Axios DELETE request to delete order by ID
       const response = await axios.delete(`/order/${orderId}`);
 
+      console.log(
+        "🚀 ~ file: orderDetail.jsx:35 ~ handleDelete ~ response:",
+        response.status
+      );
+
       if (response.status == 200) {
         toast.success(response.data, {
           position: "bottom-center",
@@ -41,9 +46,10 @@ export default function OrderDetail(state) {
           pauseOnHover: true,
           draggable: true,
         });
-        setInterval(() => {
-          navigate("/pendingOrders");
-        }, 2000);
+        await new Promise((r) => setTimeout(r, 2000));
+        // setInterval(() => {
+        navigate("/pendingOrders");
+        // }, 2000);
       } else {
         toast.error(response.data, {
           position: "bottom-center",
@@ -62,7 +68,7 @@ export default function OrderDetail(state) {
   };
 
   // Function to handle book now
-  const handleBookNow = () => {
+  const handleProceed = () => {
     // Navigate to "/book" route with the orderId as a parameter
     navigate("/book");
   };
@@ -80,11 +86,11 @@ export default function OrderDetail(state) {
           onClick={() => {
             {
               if (orderData.orderStatus.toLowerCase() === "pending") {
-                navigate("/pendingOrders");
+                navigate(-1);
               } else if (orderData.orderStatus.toLowerCase() === "ongoing") {
-                navigate("/track");
+                navigate(-1);
               } else {
-                navigate("/previousOrders");
+                navigate(-1);
               }
             }
           }}
@@ -112,7 +118,7 @@ export default function OrderDetail(state) {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-6 h-7"
+                  className="w-6 h-7"
                 >
                   <path
                     stroke-linecap="round"
@@ -226,7 +232,7 @@ export default function OrderDetail(state) {
               <button
                 className="btn btn-wide mt-6 bg-blue hover:bg-blue"
                 onClick={(e) => {
-                  handleBookNow(); // Call handleBookNow function for completed orders
+                  handleProceed(); // Call handleProceed  function for completed orders
                 }}
               >
                 Request New Transit

@@ -11,7 +11,7 @@ export default function Header() {
     navigate("/profile");
   }
   const handleLogout = () => {
-    navigate("/login", { replace: true });
+    navigate("/login");
   };
 
   return (

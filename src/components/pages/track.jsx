@@ -1,20 +1,22 @@
 import line from "../../assets/images/line.svg";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ScrollTrack from "./scrollTrack";
 import SearchList from "../pages/serachList";
 import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { noteContext } from "../../Context/noteContext";
 
 export default function Track() {
   const [searchFeild, setSearchFeild] = useState("");
   const [data, setData] = useState([]);
   const navigate = useNavigate();
+  const { emailLog } = useContext(noteContext);
 
   const getData = async () => {
     try {
       const response = await axios.post("/getOngoingOrderDetails", {
-        email: "example@email.com",
+        email: emailLog,
       });
       setData(response.data);
       console.log("Ongoing Data", data);
@@ -51,9 +53,9 @@ export default function Track() {
       </ScrollTrack>
     );
   }
-  function handleBack() {
+  const handleBack = () => {
     navigate("/book");
-  }
+  };
   return (
     <div
       className="relative flex drop-shadow-2xl -top-14 items-start justify-center bg-white max-w-sm
@@ -68,7 +70,7 @@ export default function Track() {
             stroke-width="1.5"
             stroke="currentColor"
             className="w-5 h-5 cursor-pointer"
-            onClick={handleBack}
+            onClick={() => handleBack()}
           >
             <path
               stroke-linecap="round"

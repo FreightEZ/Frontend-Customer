@@ -19,6 +19,7 @@ export default function Order() {
   const [isDone, setIsDone] = useState(false);
   const [isInsuranceAddedShow, setIsInsuranceAddedShow] = useState(false);
   const [expectedDeliveryDate, setExpectedDeliveryDate] = useState("NA");
+  // const [invTimer, setInvTimer] = useState(0);
   const navigate = useNavigate();
   const { bookData } = useContext(noteContext);
   console.log("🚀 ~ file: order.jsx:10 ~ Order ~ bookData:", bookData);
@@ -107,16 +108,17 @@ export default function Order() {
     // console.log("Expected Delivery Date : ", val);
   }, []);
 
-  function handleLearnMore(e) {
+  const handleLearnMore = () => {
     navigate("/insurance");
-  }
+  };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    console.log("OK");
     try {
+      console.log("OK1");
       // Send POST request to /register endpoint with form data
       const response = await axios.post("/orderDetails", {
-        email: "example@email.com",
         ...bookData,
         isInsuranceAdded: isInsuranceAdded,
         paymentMode: paymentMode,
@@ -127,9 +129,10 @@ export default function Order() {
         orderStatus: orderStatus,
       });
 
+      console.log("OK2");
       // Handle successful response
-      console.log(response);
       if (response.status == 201) {
+        console.log("OK3");
         toast.success("Order placed Succesfully", {
           position: "bottom-center",
           autoClose: 1000,
@@ -138,10 +141,16 @@ export default function Order() {
           pauseOnHover: true,
           draggable: true,
         });
-        setInterval(() => {
-          navigate("/success");
-        }, 2000);
+
+        await new Promise((r) => setTimeout(r, 2000));
+        // .then(
+        // setInterval(() => {
+        console.log("redir");
+        navigate("/success");
+        // }, 2000);
+        // );
       } else {
+        console.log("OK4");
         toast.error("Order not placed", {
           position: "bottom-center",
           autoClose: 1000,
@@ -153,6 +162,7 @@ export default function Order() {
       }
       // Do something with response data, e.g., redirect to another page
     } catch (error) {
+      console.log("OK5");
       // Handle error
       toast.error(error, {
         position: "bottom-center",
@@ -163,6 +173,10 @@ export default function Order() {
         draggable: true,
       });
     }
+  };
+
+  const handleBack = () => {
+    navigate("/book");
   };
 
   console.log(bookData.pickupLocation);
@@ -178,9 +192,7 @@ export default function Order() {
           stroke-width="1.5"
           stroke="currentColor"
           className="w-5 h-5 cursor-pointer"
-          onClick={(e) => {
-            navigate("/book");
-          }}
+          onClick={() => handleBack()}
         >
           <path
             stroke-linecap="round"
@@ -193,7 +205,7 @@ export default function Order() {
       </div>
       <div className="relative -top-16">
         <div className="flex flex-col gap-4 mx-8 items-start justify-center">
-          <div className="max-w-xs w-[80vw] shadow-[0px_0px_10px_3px_rgba(0,0,0,0.15)] p-3 rounded-lg">
+          <div className="max-w-xs shadow-[0px_0px_10px_3px_rgba(0,0,0,0.15)] p-3 rounded-lg">
             <div className="flex flex-row gap-12 justify-between items-center">
               <div>
                 <p className="flex flex-row gap-2 mx-2 text-sm font-medium">
@@ -206,7 +218,7 @@ export default function Order() {
                     viewBox="0 0 24 24"
                     stroke-width="1.5"
                     stroke="currentColor"
-                    class="w-6 h-7"
+                    className="w-6 h-7"
                   >
                     <path
                       stroke-linecap="round"
@@ -248,7 +260,7 @@ export default function Order() {
                     transit.
                     <span
                       className="text-blue cursor-pointer"
-                      onClick={handleLearnMore}
+                      onClick={() => handleLearnMore()}
                     >
                       {" "}
                       Learn More.
@@ -323,7 +335,7 @@ export default function Order() {
       <p className="flex relative -top-12 m-2 w-screen max-w-sm px-6 font-semibold">
         Payment
       </p>
-      <div className="relative -top-14 mt-6 mx-8 mb-3 max-s-sm ">
+      <div className="relative -top-14 mt-6 mx-8 mb-3 max-s-sm w-auto ">
         <p className="-mt-3 mx-4">Mode</p>
         <div
           id="modeDiv"
@@ -458,7 +470,7 @@ export default function Order() {
         <div className="flex justify-center items-center">
           <button
             className="btn btn-wide mt-6 bg-blue hover:bg-blue"
-            onClick={handleFormSubmit}
+            onClick={(event) => handleFormSubmit(event)}
           >
             Book Now
           </button>

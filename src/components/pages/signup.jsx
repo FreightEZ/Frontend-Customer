@@ -37,9 +37,10 @@ export default function Signup() {
           pauseOnHover: true,
           draggable: true,
         });
-        setInterval(() => {
-          navigate("/login");
-        }, 2000);
+        await new Promise((r) => setTimeout(r, 2000));
+        // setInterval(() => {
+        navigate("/login");
+        // }, 2000);
       } else {
         toast.error(response.data, {
           position: "bottom-center",
@@ -90,7 +91,7 @@ export default function Signup() {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-5 h-5"
+                  className="w-5 h-5"
                 >
                   <path
                     stroke-linecap="round"
@@ -125,7 +126,7 @@ export default function Signup() {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-5 h-5"
+                  className="w-5 h-5"
                 >
                   <path
                     stroke-linecap="round"
@@ -158,7 +159,7 @@ export default function Signup() {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-5 h-5"
+                  className="w-5 h-5"
                 >
                   <path
                     stroke-linecap="round"
@@ -192,7 +193,7 @@ export default function Signup() {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-5 h-5"
+                  className="w-5 h-5"
                 >
                   <path
                     stroke-linecap="round"
@@ -226,7 +227,7 @@ export default function Signup() {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-5 h-5"
+                  className="w-5 h-5"
                 >
                   <path
                     stroke-linecap="round"
@@ -259,7 +260,7 @@ export default function Signup() {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-5 h-5"
+                  className="w-5 h-5"
                 >
                   <path
                     stroke-linecap="round"
@@ -297,7 +298,7 @@ export default function Signup() {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-5 h-5"
+                  className="w-5 h-5"
                 >
                   <path
                     stroke-linecap="round"
@@ -318,17 +319,17 @@ export default function Signup() {
             </div>
           </div>
           <button
-            className="btn btn-wide mt-1 bg-blue hover:bg-blue"
-            onClick={handleFormSubmit}
+            className="btn btn-wide mt-2 bg-blue hover:bg-blue"
+            onClick={(event) => handleFormSubmit(event)}
           >
             Signup
           </button>
         </form>
       </div>
-      <div className="flex mt-4 mb-7 gap-1 text-md cursor-pointer">
+      <div className="flex mt-5 mb-7 gap-1 text-md cursor-pointer">
         <p>Already had one ? </p>
         <p
-          onClick={(e) => {
+          onClick={() => {
             navigate("/login");
           }}
         >
