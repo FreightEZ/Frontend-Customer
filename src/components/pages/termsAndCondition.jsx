@@ -78,19 +78,6 @@ export default function TermsAndCondition() {
         <div className="m-2">
           <img src={line} alt="alt : line"></img>
         </div>
-        <div className="relative mx-1">
-          <p className="font-bold">Liability and Insurance</p>
-          <p className="my-2 text-xs mx-2">
-            Our app does not provide any liability or insurance coverage for the
-            goods or cargo being transported. It is your responsibility to
-            ensure that appropriate insurance coverage is in place for your
-            cargo. We recommend consulting with your insurance provider for
-            suitable coverage options.
-          </p>
-        </div>
-        <div className="m-2">
-          <img src={line} alt="alt : line"></img>
-        </div>
       </div>
     </>
   );

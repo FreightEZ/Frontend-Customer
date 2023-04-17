@@ -168,7 +168,7 @@ export default function OrderDetail(state) {
             <div className="flex flex-row gap-5 justify-between items-center">
               <div>
                 <p className="flex flex-row gap-2 text-sm font-semibold mb-2">
-                  🛣 Distance : {orderData.distance ? orderData.distance : "0"}{" "}
+                  🛣 Distance : {orderData.distanceKm ? orderData.distanceKm : "0"}{" "}
                   km
                 </p>
                 <div className="flex flex-row gap-2 text-sm font-semibold mb-2">

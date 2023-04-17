@@ -16,10 +16,13 @@ export default function PassedCity({ city }) {
                   <li className="sm:py-2 h-10">
                     <div className="flex items-center justify-centers space-x-4">
                       <div className="flex-1 ">
-                        <p className=" text-lg font-medium text-gray-900 truncate dark:text-white">
-                          Crossed {city.passed} At {city.time}
+                        <p className=" text-sm font-medium text-gray-900 truncate dark:text-white">
+                          Crossed : {city.passed}
                         </p>
-                        {/* <p className="text-sm text-gray-500 truncate dark:text-gray-400"></p> */}
+                        <p className="text-xs text-gray-500 truncate dark:text-gray-400">
+                          {" "}
+                          {city.time} : {city.Date}{" "}
+                        </p>
                       </div>
                     </div>
                   </li>
